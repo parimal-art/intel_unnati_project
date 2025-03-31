@@ -1,5 +1,5 @@
 # Project Title
-Enhancing Customer Experience with AI-Driven Insights for Online Shopping
+Enhancing Customer Experience with AI-Driven Insights
 # Problem Statement
 Offering a customized and interactive try-on experience is crucial in the quickly expanding online retail sector to increase customer satisfaction and conversion rates. The inability to virtually try on sunglasses and see how they would appear makes customers hesitant to buy them online. The difficulty lies in developing an AI-powered system that uses both real-time and customer-uploaded photos to facilitate a smooth virtual try-on process for sunglasses, thus enhancing the online shopping experience.
 # Goal
