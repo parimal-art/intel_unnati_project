@@ -90,6 +90,16 @@ To make sure it worked for online shopping, the application was tested in a vari
 **Output:** The captured image with sunglasses overlaid, displayed side by side with the original captured image.
 ![image](https://github.com/user-attachments/assets/4ac872e3-03ef-4e3c-a83e-6ef43d5c12ca)
 
+# YouTube Video Links for a Complete Guide
+See the following YouTube video for a thorough, step-by-step tutorial on configuring and managing the "Sunglasses Try-On Studio" project in Google Colab:
+
+**Complete Guide:** [Configuring Google Colab's Sunglasses Try-On Studio for AI-Powered Online Buying](https://youtu.be/J-igtpNcZ90) 
+Installing dependencies, downloading OpenVINO model files, uploading the frontend and backend code, running the application, and testing the virtual try-on features are all steps in this video that takes you through the entire Google Colab project setup process. It covers installing necessary libraries and starting a new notebook in Google Colab.
+obtaining the OpenVINO face detection model files.
+establishing the front-end web interface and the back-end Flask server.
+launching the program and using the Ngrok URL to access it.
+
+
 # Conclusion
 A virtual try-on system for online shopping is successfully implemented by the "Sunglasses Try-On Studio" project, which allows for both static image uploads and real-time webcam image capture. Important characteristics include:
 
