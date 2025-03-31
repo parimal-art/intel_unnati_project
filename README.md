@@ -66,6 +66,42 @@ Side-by-Side Comparison: To enable customers to compare the try-on outcomes, inp
 
 **UI Improvements:** To improve the user experience when shopping online, side-by-side comparison and file name display were added.
 # Architecture Diagram
+![graphviz](https://github.com/user-attachments/assets/90f20c5a-a1ce-4db9-9f8a-b2c857bf4e65)
+# Output:
+To make sure it worked for online shopping, the application was tested in a variety of scenarios. The expected results are listed below.
+
+**Sunglasses Upload Input:** A solid-background PNG picture of sunglasses.
+
+![image](https://github.com/user-attachments/assets/b39bd07b-fa12-47ec-81f7-84cad7159c0e) 
+
+**After processing output:** The processed sunglasses image appears in the preview after the background is eliminated and extra space is cropped.
+
+![image](https://github.com/user-attachments/assets/050e29d5-f0c1-412c-9e84-53cc594cd06f)
+# Static Image Mode (Photo Upload)
+**Input:** A previously captured photo of a customer’s face and a processed sunglasses image.
+
+**Output:** The sunglasses are overlaid on the face, and the input and output images are displayed side by side.
+
+![image](https://github.com/user-attachments/assets/e050624c-fc32-408a-8c81-071c3cd90d69)
+
+# Real-Time Capture Mode (Webcam)
+**Input:** A single image captured via webcam.
+
+**Output:** The captured image with sunglasses overlaid, displayed side by side with the original captured image.
+![image](https://github.com/user-attachments/assets/4ac872e3-03ef-4e3c-a83e-6ef43d5c12ca)
+
+# Conclusion
+A virtual try-on system for online shopping is successfully implemented by the "Sunglasses Try-On Studio" project, which allows for both static image uploads and real-time webcam image capture. Important characteristics include:
+
+There are two modes: Real-Time Capture Mode for webcam-captured images (single image, not video) and Static Image Mode for previously taken pictures.
+Logic-based automatic background removal for proper handling of PNG images.
+OpenVINO face detection for precise sunglasses overlay.
+Cropping and color preservation for improved alignment.
+An easy-to-use interface featuring side-by-side comparison and file name display.
+
+
+
+
 
 
 
