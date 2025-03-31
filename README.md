@@ -5,9 +5,12 @@ Offering a customized and interactive try-on experience is crucial in the quickl
 # Goal
 The goal of this project is to create an AI-powered system that allows users to virtually try on sunglasses, improving the online shopping experience. The system is going to:
 
-Allow for two different operating modes:
-Static Image Mode: Let clients try on sunglasses and upload a previously taken picture.
-Real-Time Capture Mode: Use the webcam to take a single picture (not a video) and then put on sunglasses to simulate wearing them.
+**Allow for two different operating modes:**
+
+**Static Image Mode:** Let clients try on sunglasses and upload a previously taken picture.
+
+**Real-Time Capture Mode:** Use the webcam to take a single picture (not a video) and then put on sunglasses to simulate wearing them.
+
 Utilize customer behavior data and real-time image analytics to customize the try-on process.
 To increase user engagement, create an intuitive user interface with features like file name display, side-by-side input and output image comparison, and a contemporary design.
 # Overview of the Project
@@ -51,5 +54,19 @@ Using the bounding box coordinates from OpenVINO, sunglasses were resized and su
 **File Uploads:** File uploads, file names, and Static Image Mode previews were all handled by JavaScript.
 
 **Integration of Webcams:** The webcam was accessed, a single image (not a video) was taken, and it was processed for the Real-Time Capture Mode using the navigator.mediaDevices.getUserMedia API.
+
+Side-by-Side Comparison: To enable customers to compare the try-on outcomes, input and output images were presented side by side in a flexbox layout.
+
+# Important Features and Solutions
+**Background Removal Logic:** Added logic to verify that PNG images are truly transparent and to remove the background only when required.
+
+**Color Preservation:** To avoid color shifts during processing, color space conversions were handled.
+
+**Cropping:** To improve alignment, extra space around sunglasses was cropped using the alpha channel.
+
+**UI Improvements:** To improve the user experience when shopping online, side-by-side comparison and file name display were added.
+# Architecture Diagram
+
+
 
 
