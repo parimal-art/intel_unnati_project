@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunglasses Try-On Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(45deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 40px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotateGlow 15s linear infinite;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #fff;
+            margin: 30px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #00d4ff;
+            transition: width 0.4s ease;
+        }
+
+        h2:hover::after {
+            width: 100%;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 400px;
+            margin: 15px 0;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            border: 2px dashed rgba(0, 212, 255, 0.5);
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #00d4ff;
+            border: 2px dashed rgba(0, 212, 255, 0.5);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .file-upload-wrapper:hover .file-upload-label {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(0, 212, 255, 0.8);
+            color: #fff;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 10px;
+            color: #e0e0e0;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        button {
+            padding: 14px 40px;
+            background: linear-gradient(45deg, #00d4ff, #007bff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.6);
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        img, video, canvas {
+            max-width: 100%;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .visible {
+            opacity: 1;
+        }
+
+        .image-comparison {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .image-comparison img {
+            max-width: 48%;
+            flex: 1;
+        }
+
+        .loading {
+            display: none;
+            font-size: 1.2em;
+            color: #00d4ff;
+            margin: 15px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+            to { text-shadow: 0 0 20px rgba(0, 212, 255, 0.8); }
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section:hover .tooltip {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sunglasses Try-On Studio</h1>
+
+        <!-- Sunglasses Upload Section -->
+        <div class="section">
+            <h2>Select Your Shades</h2>
+            <span class="tooltip">Upload a sunglasses image</span>
+            <div class="file-upload-wrapper">
+                <input type="file" id="sunglasses-upload" accept="image/*" onchange="showFileName('sunglasses-upload', 'sunglasses-file-name')">
+                <label for="sunglasses-upload" class="file-upload-label">Choose Sunglasses Image</label>
+                <span id="sunglasses-file-name" class="file-name">No file chosen</span>
+            </div>
+            <img id="sunglasses-preview" src="" alt="Sunglasses Preview">
+            <div class="loading" id="sunglasses-loading">Processing Shades...</div>
+            <button onclick="uploadSunglasses()">Upload Sunglasses</button>
+        </div>
+
+        <!-- Photo Upload Section -->
+        <div class="section">
+            <h2>Try with Photo</h2>
+            <span class="tooltip">Upload your face photo</span>
+            <div class="file-upload-wrapper">
+                <input type="file" id="photo-upload" accept="image/*" onchange="showFileName('photo-upload', 'photo-file-name')">
+                <label for="photo-upload" class="file-upload-label">Choose Your Photo</label>
+                <span id="photo-file-name" class="file-name">No file chosen</span>
+            </div>
+            <div class="image-comparison">
+                <img id="preview" src="" alt="Photo Preview">
+                <img id="result" src="" alt="Result">
+            </div>
+            <div class="loading" id="photo-loading">Applying Sunglasses...</div>
+            <button onclick="uploadPhoto()">Try On Now</button>
+        </div>
+
+        <!-- Webcam Section -->
+        <div class="section">
+            <h2>Live Mirror Mode</h2>
+            <span class="tooltip">Use your webcam for real-time try-on</span>
+            <button onclick="startWebcam()">Start Mirror</button>
+            <button onclick="captureFrame()" id="capture-button" style="display: none;">Capture</button>
+            <button onclick="stopWebcam()" id="stop-webcam" style="display: none;">Stop Mirror</button>
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <div class="image-comparison">
+                <img id="webcam-capture" src="" alt="Captured Frame">
+                <img id="webcam-preview" src="" alt="Webcam Preview">
+            </div>
+            <div class="loading" id="webcam-loading">Processing Capture...</div>
+        </div>
+    </div>
+
+    <script>
+        // Function to show file name when a file is selected
+        function showFileName(inputId, displayId) {
+            const fileInput = document.getElementById(inputId);
+            const fileNameDisplay = document.getElementById(displayId);
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = "No file chosen";
+            }
+        }
+
+        // Sunglasses Upload Logic
+        function uploadSunglasses() {
+            const fileInput = document.getElementById('sunglasses-upload');
+            const preview = document.getElementById('sunglasses-preview');
+            const loading = document.getElementById('sunglasses-loading');
+
+            if (!fileInput.files[0]) {
+                alert("Please select a sunglasses image!");
+                return;
+            }
+
+            loading.style.display = 'block';
+            preview.src = URL.createObjectURL(fileInput.files[0]);
+            preview.classList.add('visible');
+
+            const formData = new FormData();
+            formData.append('sunglasses', fileInput.files[0]);
+
+            fetch('/upload_sunglasses', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Sunglasses upload response:', data);  // Log response
+                loading.style.display = 'none';
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    preview.src = 'data:image/png;base64,' + data.sunglasses;
+                    preview.classList.add('visible');
+                    console.log('Sunglasses uploaded successfully.');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                console.error('Error uploading sunglasses:', error);
+            });
+        }
+
+        // Photo Upload Logic
+        function uploadPhoto() {
+            const fileInput = document.getElementById('photo-upload');
+            const preview = document.getElementById('preview');
+            const result = document.getElementById('result');
+            const loading = document.getElementById('photo-loading');
+
+            if (!fileInput.files[0]) {
+                alert("Please select a photo!");
+                return;
+            }
+
+            loading.style.display = 'block';
+            preview.src = URL.createObjectURL(fileInput.files[0]);
+            preview.classList.add('visible');
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Photo upload response:', data);  // Log response
+                loading.style.display = 'none';
+                if (data.error) {
+                    alert(data.error);
+                } else if (data.image) {
+                    result.src = 'data:image/png;base64,' + data.image;
+                    result.classList.add('visible');
+                    console.log('Photo processed successfully and displayed.');
+                } else {
+                    console.log('No image data in response.');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                console.error('Error uploading photo:', error);
+            });
+        }
+
+        // Webcam Logic
+        let stream;
+        let video;
+        let canvas;
+
+        function startWebcam() {
+            video = document.getElementById('webcam');
+            canvas = document.getElementById('canvas');
+            const preview = document.getElementById('webcam-preview');
+            const capturedFrame = document.getElementById('webcam-capture');
+            const stopButton = document.getElementById('stop-webcam');
+            const captureButton = document.getElementById('capture-button');
+
+            navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+                .then(s => {
+                    stream = s;
+                    video.srcObject = stream;
+                    video.classList.add('visible');
+                    stopButton.style.display = 'inline-block';
+                    captureButton.style.display = 'inline-block';
+
+                    video.onloadedmetadata = () => {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+                    };
+                })
+                .catch(error => {
+                    console.error('Webcam Error:', error);
+                    alert('Could not access webcam. Please check permissions.');
+                });
+        }
+
+        function captureFrame() {
+            const capturedFrame = document.getElementById('webcam-capture');
+            const preview = document.getElementById('webcam-preview');
+            const loading = document.getElementById('webcam-loading');
+            const context = canvas.getContext('2d');
+
+            loading.style.display = 'block';
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+            capturedFrame.src = imageData;  // Display captured frame
+            capturedFrame.classList.add('visible');
+            console.log('Captured frame:', imageData.substring(0, 50));
+
+            fetch('/webcam', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Webcam response:', data);  // Log backend response
+                loading.style.display = 'none';
+                if (data.error) {
+                    alert(data.error);
+                } else if (data.image) {
+                    preview.src = 'data:image/png;base64,' + data.image;
+                    preview.classList.add('visible');
+                    console.log('Preview updated with processed frame.');
+                } else {
+                    console.log('No image data in response.');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                console.error('Error processing captured frame:', error);
+            });
+        }
+
+        function stopWebcam() {
+            const video = document.getElementById('webcam');
+            const capturedFrame = document.getElementById('webcam-capture');
+            const preview = document.getElementById('webcam-preview');
+            const stopButton = document.getElementById('stop-webcam');
+            const captureButton = document.getElementById('capture-button');
+            const loading = document.getElementById('webcam-loading');
+
+            stream.getTracks().forEach(track => track.stop());
+            video.classList.remove('visible');
+            capturedFrame.classList.remove('visible');
+            preview.classList.remove('visible');
+            stopButton.style.display = 'none';
+            captureButton.style.display = 'none';
+            loading.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
